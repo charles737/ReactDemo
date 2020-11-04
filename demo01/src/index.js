@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+// import App from './App'
+import Fullstack from './Fullstack'
 
-ReactDOM.render(<App />,document.getElementById('root'))
+ReactDOM.render(<Fullstack />,document.getElementById('root'))
