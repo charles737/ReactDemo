@@ -1,4 +1,5 @@
 import React,{Component, Fragment} from 'react'
+import './style.css'
 
 class Fullstack extends Component{
 
@@ -23,14 +24,23 @@ class Fullstack extends Component{
             // 2. 第二种写法，少一层div包裹，可以省略一些css
             <Fragment>
                 <div>
+                    <label htmlFor='js'>需求：</label>
                     {/* bind()是es6中的语法,用来绑定this */}
-                    <input value={this.state.inputValue} onChange={this.inputChange.bind(this)}/> 
-                    <button onClick={this.addList.bind(this)}>增加需求</button>
+                    <input id='js' className='input' value={this.state.inputValue} onChange={this.inputChange.bind(this)}/> 
+                    <button onClick={this.addList.bind(this)}>添加需求</button>
                 </div>
                 <ul>
                     {
                         this.state.list.map((item,index)=>{
-                        return <li key={index+item}>{item}</li>
+                        return (
+                            <li 
+                                key={index+item}
+                                onClick={this.deleteItem.bind(this,index)}
+                                // html解析
+                                dangerouslySetInnerHTML={{__html:item}}
+                            >
+                            </li>
+                        )
                         })
                     }
                 </ul>
@@ -44,11 +54,24 @@ class Fullstack extends Component{
         })
     }
 
-    // 增加列表
+    // 增加列表项
     addList(){
         this.setState({
             list:[...this.state.list,this.state.inputValue],
             inputValue:''
+        })
+    }
+
+    // 删除列表项
+    deleteItem(index){
+        /**
+         * 错误写法：this.state.list.splice(index,1)
+         * 原因：会有性能损耗
+         */
+        let list = this.state.list
+        list.splice(index,1)
+        this.setState({
+            list:list
         })
     }
 }
