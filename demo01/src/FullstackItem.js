@@ -8,20 +8,34 @@ class FullstackItem extends Component {
         this.handleClick=this.handleClick.bind(this)
     }
 
-    /**
-     * 组件第一次存在与dom中，函数不会被执行
-     * 如果已经存在于dom中，函数才会被执行
-     */
-    componentWillReceiveProps(){
-        console.log('child-componentWillReceiveProps')
-    }
+    // /**
+    //  * 组件第一次存在与dom中，函数不会被执行
+    //  * 如果已经存在于dom中，函数才会被执行
+    //  */
+    // componentWillReceiveProps(){
+    //     console.log('child-componentWillReceiveProps')
+    // }
 
-    componentWillUnmount(){
-        console.log('child-componentWillUnmount')
+    // componentWillUnmount(){
+    //     console.log('child-componentWillUnmount')
+    // }
+
+    /**
+     * 组件优化
+     * @param {*} nextProps 
+     * @param {*} nextState 
+     */
+    shouldComponentUpdate(nextProps,nextState){
+        if(nextProps.content !== this.props.content){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     render() { 
-        return ( 
+        console.log('child-render')
+        return (
             <li onClick={this.handleClick}>
                 {this.props.pgname}负责-{this.props.content}
             </li>

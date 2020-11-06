@@ -1,6 +1,9 @@
 import React,{Component, Fragment} from 'react'
+import axios from 'axios'
 import './style.css'
 import FullstackItem from './FullstackItem'
+import Boss from './Boss'
+import {CSSTransition, TransitionGroup} from 'react-transition-group'
 
 class Fullstack extends Component{
 
@@ -8,47 +11,60 @@ class Fullstack extends Component{
         super(props)
         this.state={
             inputValue:'',
-            list:['UI设计','前端设计']
+            list:[]
         }
     }
 
-    /**
-     * 生命周期函数，对代码主体没有影响
-     */
-    componentWillMount(){
-        console.log('componentWillMount---组件将要挂载到页面的时刻')
-    }
+    // /**
+    //  * 生命周期函数，对代码主体没有影响
+    //  */
+    // componentWillMount(){
+    //     console.log('componentWillMount---组件将要挂载到页面的时刻')
+    // }
 
-    /**
-     * 生命周期函数
-     */
-    componentDidMount(){
-        console.log('componentDidMount---组件挂载完成时刻')
-    }
+    // /**
+    //  * 生命周期函数
+    //  */
+    // componentDidMount(){
+    //     console.log('componentDidMount---组件挂载完成时刻')
+    // }
 
-    /**
-     * 生命周期函数
-     * 在render之前执行，必须返回布尔值，true执行render，false不执行
-     * 作用：优化组件性能
-     */
+    // /**
+    //  * 生命周期函数
+    //  * 在render之前执行，必须返回布尔值，true执行render，false不执行
+    //  * 作用：优化组件性能
+    //  */
     
-    shouldComponentUpdate(){
-        console.log('1-shouldComponentUpdate')
-        return true
-    }
+    // shouldComponentUpdate(){
+    //     console.log('1-shouldComponentUpdate')
+    //     return true
+    // }
 
-    /**
-     * 生命周期函数
-     */
-    componentWillUpdate(){
-        console.log('2-componentWillUpdate')
-    }
+    // /**
+    //  * 生命周期函数
+    //  */
+    // componentWillUpdate(){
+    //     console.log('2-componentWillUpdate')
+    // }
 
-    /**
-     * 生命周期函数
-     */
-    componentDidUpdate(){
-        console.log('4-componentDidUpdate')
+    // /**
+    //  * 生命周期函数
+    //  */
+    // componentDidUpdate(){
+    //     console.log('4-componentDidUpdate')
+    // }
+
+    componentDidMount(){
+        axios.get('https://easy-mock.com/mock/5fa4b02f60b9b97b2c3994b2/ReactDemo01/fullstack')
+        .then((res)=>{
+            console.log('axios 获取数据成功:'+JSON.stringify(res))
+            this.setState({
+                list:res.data.data
+            })
+        })
+        .catch((error)=>{
+            console.log('axios 获取数据失败:'+error)
+        })
     }
 
     /**
@@ -56,7 +72,7 @@ class Fullstack extends Component{
      */
     render(){
         // 生命周期函数
-        console.log('3-render---组件挂载中')
+        // console.log('3-render---组件挂载中')
         return (
             /**
              * 1. 第一种写法
@@ -85,20 +101,32 @@ class Fullstack extends Component{
                     <button onClick={this.addList.bind(this)}>添加需求</button>
                 </div>
                 <ul ref={(ul)=>{this.ul=ul}}>
-                    {
-                        this.state.list.map((item,index)=>{
-                        return (
-                                // 父组件向子组件按属性传值
-                                <FullstackItem
-                                    key={index+item}
-                                    content={item}
-                                    index={index}
-                                    deleteItem={this.deleteItem.bind(this)}
-                                 />
-                        )
-                        })
-                    }
+                    <TransitionGroup>
+                        {
+                            this.state.list.map((item,index)=>{
+                            return (
+                                    <CSSTransition
+                                        timeout={2000}
+                                        classNames='boss-text'
+                                        unmountOnExit
+                                        appear={true}
+                                        key={index+item}
+                                    >
+                                        {/* 父组件向子组件按属性传值 */}
+                                        <FullstackItem
+                                            key={index+item}
+                                            content={item}
+                                            index={index}
+                                            deleteItem={this.deleteItem.bind(this)}
+                                        />
+                                    </CSSTransition>
+                            )
+                            })
+                        }
+                    </TransitionGroup>
                 </ul>
+
+                <Boss/>
             </Fragment>
         )
     }
@@ -116,8 +144,6 @@ class Fullstack extends Component{
         this.setState({
             list:[...this.state.list,this.state.inputValue],
             inputValue:''
-        },()=>{
-            console.log(this.ul.querySelectorAll('li').length)
         })
     }
 
@@ -136,3 +162,4 @@ class Fullstack extends Component{
 }
 
 export default Fullstack
+
